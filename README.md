@@ -75,9 +75,40 @@ cd /vast/kkuchib1/mohammad/kuchibhotlalab-pipeline
 python pipeline_tuning_single_channel.py
 ```
 
+this is for dual channel, and multi session
+```
+
+#!/bin/bash
+#SBATCH --account=kkuchib1
+#SBATCH --job-name=prp-sk-dual      # create a short name for your job
+#SBATCH --nodes=1                   # node count
+#SBATCH --ntasks=1                  # total number of tasks across all nodes
+#SBATCH --cpus-per-task=1           # cpu-cores per task (>1 if multi-threaded tasks)
+#SBATCH --mem-per-cpu=64G           # memory per cpu-core (4G is default)
+#SBATCH --time=8:00:00              # total run time limit (HH:MM:SS)
+#SBATCH --partition=shared
+#SBATCH --qos=normal
+#SBATCH --array=0
+#SBATCH --output=preprocessing-sk-%A_%a.log
+
+module load gcc/9.3.0
+module load anaconda3/2024.02-1
+conda activate suite2p
+cd /vast/kkuchib1/su/klab-pipeline
+
+# Define session list
+SESSIONS=("sk310-20260106_01" "sk310-20260106_03" "sk310-20260106_04" "sk310-20260106_05")
+SESSION=${SESSIONS[$SLURM_ARRAY_TASK_ID]}
+SESSION_DIR="/vast/kkuchib1/su/Data/$SESSION"
+
+# For scanbox sessions, nplanes and fs are overwritten from the metadata
+#python register.py --session "$SESSION_DIR" --nchannel 2 --nplane 1 --fs 14.73 --ppmx 1.0 --ppmy 1.0
+```
+
 and save the file
 8. when you want to run the task, in the terminal, type
 ```sbatch job.slurm```
 9. then, a job id will be generated and a file named slurm-jobid.log will be created that outputs text from the job you are running. jobid is a string of numbers
 10. check progress use ```sqme```
-12. to check the job, use ```cat slurm-jobid.out```
+
+11. to check the job, use ```cat slurm-jobid.out```
