@@ -111,4 +111,4 @@ and save the file
 9. then, a job id will be generated and a file named slurm-jobid.log will be created that outputs text from the job you are running. jobid is a string of numbers
 10. check progress use ```sqme```
 
-11. to check the job, use ```cat slurm-jobid.out```
+11. to check the job, use ```cat slurm-jobid.log```
